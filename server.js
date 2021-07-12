@@ -2,6 +2,9 @@ const express = require('express')
 const fsPromises = require('fs/promises')
 const app = express()
 
+const project_id = '2ada296de2764e16915ac5a874444b0c'
+const provider = new InfuraProvider('homestead', project_id)
+
 const PORT = 3333
 const IP_LOOPBACK = 'localhost'
 const LOG_FILE = 'login.json'
@@ -34,6 +37,10 @@ app.get('/login/:name/:password', async (req, res) => {
   } catch (e) {
     console.log(`Error: can't read in ${LOG_FILE}`)
   }
+})
+
+app.get('/balance/:address', async (req, res) => {
+  res.send(provider.getBalance(req.params.address))
 })
 
 app.listen(PORT, async () => {
