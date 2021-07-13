@@ -42,6 +42,8 @@ app.get('/balance/:network/:address', async (req, res) => {
   const provider = new ethers.providers.InfuraProvider(req.params.network, project_id)
   if (ethers.utils.isAddress(req.params.address)) {
     res.send(ethers.utils.formatEther(await provider.getBalance(req.params.address)))
+  } else {
+    res.send('Address not found')
   }
 })
 
