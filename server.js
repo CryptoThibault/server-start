@@ -1,9 +1,7 @@
 const express = require('express')
 const fsPromises = require('fs/promises')
+const ethers = require('ethers')
 const app = express()
-
-const project_id = '2ada296de2764e16915ac5a874444b0c'
-const provider = new InfuraProvider('homestead', project_id)
 
 const PORT = 3333
 const IP_LOOPBACK = 'localhost'
@@ -39,8 +37,12 @@ app.get('/login/:name/:password', async (req, res) => {
   }
 })
 
-app.get('/balance/:address', async (req, res) => {
-  res.send(provider.getBalance(req.params.address))
+app.get('/balance/:network/:address', async (req, res) => {
+  const project_id = '2ada296de2764e16915ac5a874444b0c'
+  const provider = new ethers.providers.InfuraProvider(req.params.network, project_id)
+  if (ethers.utils.isAddress(req.params.address)) {
+    res.send(ethers.utils.formatEther(await provider.getBalance(req.params.address)))
+  }
 })
 
 app.listen(PORT, async () => {
